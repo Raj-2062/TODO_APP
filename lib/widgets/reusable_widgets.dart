@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart'; // Make sure intl is in your pubspec.yaml
 
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/utils/constants.dart';
@@ -132,20 +132,28 @@ class TodoListItem extends StatelessWidget {
                 ),
               const SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center, // Vertically center items
                 children: [
-                  _buildInfoChip(
-                    context,
-                    Icons.calendar_today,
-                    DateFormat.yMMMd().format(todo.dueDate),
-                    isCompleted,
+                  Flexible(
+                    flex: 3, // Give more flex to date if it's longer
+                    child: _buildInfoChip(
+                      context,
+                      Icons.calendar_today,
+                      // MODIFIED: Added time to the date format
+                      DateFormat('yMMMd hh:mm a').format(todo.dueDate),
+                      isCompleted,
+                    ),
                   ),
                   const SizedBox(width: 8),
-                  _buildInfoChip(
-                    context,
-                    Icons.category,
-                    todo.category.name,
-                    isCompleted,
+                  Flexible(
+                    flex: 2, // Give slightly less flex to category
+                    child: _buildInfoChip(
+                      context,
+                      Icons.category,
+                      todo.category.name,
+                      isCompleted,
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -178,6 +186,8 @@ class TodoListItem extends StatelessWidget {
           fontSize: 12,
           color: isCompleted ? theme.disabledColor : theme.textTheme.bodySmall?.color,
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       backgroundColor: isCompleted ? theme.disabledColor.withOpacity(0.1) : theme.cardColor,
       shape: RoundedRectangleBorder(
